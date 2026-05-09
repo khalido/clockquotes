@@ -1,12 +1,13 @@
-# /// script
-# requires-python = ">=3.11"
-# ///
-"""Build clockquotes outputs from upstream sources.
+"""Take the verified upstream sources and produce the three output files.
+
+Reads from `sources/`, writes `quotes.json`, `quotes.jsonl`, `quotes.csv`,
+and `stats.json` at the repo root. Deterministic — a no-source-changed
+build produces a byte-identical diff.
 
 Usage:
-    uv run build.py              # fetch every source, rebuild outputs
-    uv run build.py --no-fetch   # use the committed sources/ snapshots
-    uv run build.py --verify     # sanity-check the existing outputs
+    uv run python src/build_quotes.py              # fetch + rebuild
+    uv run python src/build_quotes.py --no-fetch   # use the committed sources/
+    uv run python src/build_quotes.py --verify     # sanity-check the outputs
 """
 
 import csv
@@ -18,7 +19,8 @@ import urllib.request
 from collections import defaultdict
 from pathlib import Path
 
-ROOT = Path(__file__).resolve().parent
+# src/build_quotes.py → repo root is one parent up.
+ROOT = Path(__file__).resolve().parents[1]
 SOURCES_DIR = ROOT / "sources"
 
 ALL_TIMES = [f"{h:02}:{m:02}" for h in range(24) for m in range(60)]
@@ -71,7 +73,14 @@ def load_source(name: str):
             yield [c.strip() for c in row]
 
 
-VALID_NSFW_RAW = {"", "sfw", "unknown", "nsfw", "nswf"}
+# Tokens we know how to handle in the upstream nsfw column. "nsfw" and the
+# typo "nswf" are recognized so we drop them cleanly; anything else means
+# the row is malformed (a quote bled into this cell during CSV parsing).
+KNOWN_NSFW_TOKENS = {"", "sfw", "unknown", "nsfw", "nswf"}
+
+# Upstream CSV shape — both sources use this column order. Some rows lack
+# the trailing nsfw cell; we treat missing as "unknown".
+INPUT_COLUMNS = ("time", "time_phrase", "quote", "title", "author", "nsfw")
 
 
 _BR_TAG_RE = re.compile(r"<br\s*/?>", re.IGNORECASE)
@@ -115,11 +124,12 @@ def dedup_key(time: str, quote: str) -> tuple:
     return (time, normalize_for_key(quote)[:120])
 
 
-def split_prefix_suffix(quote: str, annot: str):
-    """Split quote around annot. Returns (None, None) if annot is not found."""
-    if not annot:
+def split_around_phrase(quote: str, time_phrase: str):
+    """Split quote into (before, after) around time_phrase.
+    Returns (None, None) if time_phrase isn't found in quote."""
+    if not time_phrase:
         return None, None
-    parts = re.split(re.escape(annot), quote, maxsplit=1, flags=re.IGNORECASE)
+    parts = re.split(re.escape(time_phrase), quote, maxsplit=1, flags=re.IGNORECASE)
     if len(parts) != 2:
         return None, None
     return parts[0], parts[1]
@@ -145,51 +155,56 @@ def process():
 
     for source_name in SOURCES:
         for cells in load_source(source_name):
-            d = drops_by_source[source_name]
+            drops = drops_by_source[source_name]
 
-            # Detect malformed rows. brianpipa's CSV has rows where the nsfw
-            # cell starts with `"unknown` but never closes the quote; csv then
-            # greedily consumes the next row(s) into one giant nsfw field.
-            # Other rows have title duplicated giving 7 fields. Either way:
-            # reject rather than silently corrupt downstream entries.
-            nsfw_raw = cells[5].lower() if len(cells) >= 6 else ""
-            if (
-                not (5 <= len(cells) <= 6)
-                or "\n" in nsfw_raw
-                or nsfw_raw not in VALID_NSFW_RAW
-            ):
-                d["malformed"] += 1
+            # Allow 5 or 6 columns — older rows lack the nsfw flag.
+            # Anything else is malformed (e.g. brianpipa's CSV has rows
+            # where the nsfw cell starts with `"unknown` but never closes,
+            # so csv greedily consumes the next row(s) into one giant cell).
+            if not (5 <= len(cells) <= 6):
+                drops["malformed"] += 1
+                continue
+            cells = cells + [""] * (6 - len(cells))
+            time, phrase_raw, quote_raw, title_raw, author_raw, nsfw_raw = cells
+
+            # Reject rows whose nsfw cell isn't a recognized token — almost
+            # always a sign the CSV parser merged adjacent rows.
+            nsfw_lower = nsfw_raw.lower()
+            if "\n" in nsfw_lower or nsfw_lower not in KNOWN_NSFW_TOKENS:
+                drops["malformed"] += 1
                 continue
 
-            time = cells[0]
             if time not in ALL_TIMES_SET:
-                d["invalid_time"] += 1
-                continue
-            nsfw = normalize_nsfw(cells[5] if len(cells) >= 6 else "unknown")
-            if nsfw == "nsfw":
-                d["dropped_nsfw"] += 1
+                drops["invalid_time"] += 1
                 continue
 
-            quote = clean_text(cells[2])
-            title = clean_text(cells[3])
-            author = clean_text(cells[4])
-            annot = clean_text(cells[1])
+            nsfw = normalize_nsfw(nsfw_raw)
+            if nsfw == "nsfw":
+                drops["dropped_nsfw"] += 1
+                continue
+
+            quote = clean_text(quote_raw)
+            title = clean_text(title_raw)
+            author = clean_text(author_raw)
+            time_phrase = clean_text(phrase_raw)
 
             key = dedup_key(time, quote)
             if key in seen:
-                d["duplicates"] += 1
+                drops["duplicates"] += 1
                 continue
             seen.add(key)
 
-            prefix, suffix = split_prefix_suffix(quote, annot)
-            if prefix is None:
+            before, after = split_around_phrase(quote, time_phrase)
+            if before is None:
                 split_failures += 1
 
+            # Field order: full quote first, then the before/phrase/after triple
+            # in reading order so consumers can render them with a single concat.
             entry = {
                 "quote": quote,
-                "annot": annot,
-                "prefix": prefix,
-                "suffix": suffix,
+                "before": before,
+                "time_phrase": time_phrase,
+                "after": after,
                 "title": title,
                 "author": author,
                 "nsfw": nsfw,
@@ -208,7 +223,7 @@ def process():
 
 
 CSV_COLUMNS = [
-    "time", "quote", "annot", "prefix", "suffix",
+    "time", "quote", "before", "time_phrase", "after",
     "title", "author", "nsfw", "lang", "source",
 ]
 
@@ -310,8 +325,8 @@ def verify() -> None:
     if len(csv_rows) != len(flat):
         sys.exit(f"FAIL: quotes.csv has {len(csv_rows)} rows, quotes.jsonl has {len(flat)}")
 
-    required = {"quote", "annot", "prefix", "suffix", "title", "author", "nsfw", "lang", "source"}
-    valid_sources = set(SOURCES) | {"manual"}  # allow future hand-curated entries
+    required = {"quote", "before", "time_phrase", "after", "title", "author", "nsfw", "lang", "source"}
+    valid_sources = set(SOURCES)
     for time, entries in keyed.items():
         if not re.match(r"^\d{2}:\d{2}$", time):
             sys.exit(f"FAIL: bad time key {time!r}")
@@ -321,11 +336,11 @@ def verify() -> None:
                 sys.exit(f"FAIL: {time} entry missing keys {missing}")
             if e["source"] not in valid_sources:
                 sys.exit(f"FAIL: {time} entry has unknown source {e['source']!r}")
-            # prefix is None iff suffix is None — both indicate the time
-            # mention couldn't be located in the quote text. Consumers must
+            # before is None iff after is None — both indicate the time
+            # phrase couldn't be located in the quote text. Consumers must
             # null-check before string-concatenating.
-            if (e["prefix"] is None) != (e["suffix"] is None):
-                sys.exit(f"FAIL: {time} entry has prefix/suffix nullability mismatch")
+            if (e["before"] is None) != (e["after"] is None):
+                sys.exit(f"FAIL: {time} entry has before/after nullability mismatch")
 
     print(f"verify ok — {len(keyed)} minutes, {len(flat)} entries (json+jsonl+csv consistent)")
 

@@ -2,3 +2,7 @@ __pycache__/
 *.pyc
 .venv/
 .DS_Store
+
+# Working artifact — list of books we couldn't enrich on the latest run.
+# Reproducible from a fresh sweep; not a committed output.
+books_misses.txt

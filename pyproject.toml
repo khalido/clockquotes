@@ -1,0 +1,10 @@
+[project]
+name = "clockquotes"
+version = "0.1.0"
+description = "Minute-keyed literary quotes for building literary clocks"
+readme = "README.md"
+requires-python = ">=3.14"
+license = { file = "LICENSE" }
+dependencies = [
+    "httpx>=0.28.1",
+]
