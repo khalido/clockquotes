@@ -22,3 +22,7 @@ What the pipeline does and how to extend it.
 3. Run `uv run python src/build_quotes.py` — dedup handles overlap with existing sources.
 
 If a new source uses non-standard time semantics (like time-of-day buckets — see Urdu in `sources/urdu.jsonl`), you'll also need a bucket→HH:MM mapping step. Not wired up yet.
+
+## known artifacts
+
+**Dangling seconds in `after`.** ~53 entries (1.13%) have time-mentions with seconds — e.g. *"At 10:23:47, the Reactor 2 safety subsystem..."*. Upstream annotates the time as `10:23` (HH:MM), so our split lands `time_phrase: "10:23"` and `after: ":47, the Reactor 2..."`. Reconstruction is correct (`before + time_phrase + after === quote`), but a consumer wrapping `time_phrase` in `<mark>` will see the orphan `:47` outside the highlight. Intentional — the clock minute is what matters for keying, and the seconds read naturally as quote prose. Don't "fix" by folding `:NN` into `time_phrase` unless a UI consumer specifically asks.

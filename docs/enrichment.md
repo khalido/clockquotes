@@ -64,4 +64,14 @@ What we save per book:
 
 ## current state
 
-After one full sweep: 1,400 / 1,870 books matched (~75%). Of the matches, 87% have a cover, 58% a description, 30% a first sentence. Of the 470 misses, ~75% are real OL gaps and ~25% are recoverable transient HTTP errors that a rerun would pick up.
+After enrichment sweeps: **1,491 / 1,870 unique books matched (~80%), covering ~85% of quote occurrences** — popular titles carry more quotes, so quote-level coverage runs ahead of book-level. Among matches, 87% have a cover, 58% a description, 30% a first sentence. Higher coverage on the top 1k popular books, sparser in the long tail.
+
+Top unmatched books by quote count — candidates for a manual `books_overrides.json`:
+
+- *Blind Willow, Sleeping Woman* — Haruki Murakami (42 quotes)
+- *1Q84* — Haruki Murakami (21)
+- *A Matter of Honor* — Jeffrey Archer (16)
+- *Original Sin* — P.D. James (16)
+- *The Voices of Time* — J.G. Ballard (16)
+
+Murakami's translated short story collections are the biggest single category — likely a translation/transliteration mismatch with OL's index. Adding ten override entries here would lift quote coverage by 3–5% with no new tooling.

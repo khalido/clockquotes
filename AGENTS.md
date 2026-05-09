@@ -69,8 +69,19 @@ Design rationale and future enrichment sources (Hardcover, Wikidata, kid-friendl
 
 ## roadmap
 
-- More sources for the literary clock — see [`docs/sources.md`](docs/sources.md) for parked candidates (Hugging Face's `gutenberg_time`, the Russian set in `ligurio/litclock`, Urdu shers).
-- **Other types of quote datasets in this repo.** Movie quotes, themed/topical quotes (science, philosophy, art), maybe songs and plays. Sketched in [`docs/themed-quotes.md`](docs/themed-quotes.md). When that lands, the repo gets a refactor — likely one shared sources/ and build.py, separate output triples per dataset (the clock keeps `quotes.*`; movies become `movie-quotes.*`; themed becomes `themed.*`). Not built yet — flagged here so an agent thinking about file layout doesn't pre-commit to a clock-only structure.
+Current state: 4,676 quotes across 1,431 minutes (99.4% time coverage). `books.json` enriches 1,491 of 1,870 unique books and covers ~85% of quote occurrences. No half-finished features.
+
+Next moves, in declining order of value-per-effort:
+
+1. **`books_overrides.json` for top unmatched books.** Manual `(title, author) → OLID` for the deep cuts OL search misses. Biggest single gap is Murakami's *Blind Willow, Sleeping Woman* (42 quotes); other top targets named in [`docs/enrichment.md`](docs/enrichment.md). Ten manual entries lifts quote coverage 3–5%, no new tooling.
+2. **Authors enrichment.** Mirror `enrich_books.py` shape — walk authors, fetch OL author records, write `authors.json` keyed by author name. Adds bio + photo per author. Same patterns, low risk.
+3. **Hardcover.app spike.** Only if a consumer hits the long-tail gap. Modern Goodreads alternative with GraphQL — likely better metadata for contemporary lit than OL. Sign up needed; docs are Cloudflare-walled.
+4. **Kid-friendly blurbs via LLM.** Defer until you've used the data and felt the description gap. ~$3 one-time on a cheap model, grounded on OL description + sample quotes from the book to constrain hallucination.
+5. **`book_id`-on-quote linkage refactor.** Bake OLID into each quote entry at build time. Cleaner consumer API, removes the title-as-key brittleness (one real collision today: *Honor Among Thieves*). Do when a consumer asks.
+
+Longer-term direction: more **types** of quote datasets in this repo — movie quotes, themed/topical (science, philosophy, art), maybe songs and plays. Sketched in [`docs/themed-quotes.md`](docs/themed-quotes.md). When that lands, the repo gets a refactor — likely one shared `sources/`, separate output triples per dataset (the clock keeps `quotes.*`; movies become `movie-quotes.*`; themed becomes `themed.*`). Flagged here so an agent thinking about file layout doesn't pre-commit to a clock-only structure.
+
+Other parked literary-clock candidates (Russian, Urdu, Hugging Face `gutenberg_time`): see [`docs/sources.md`](docs/sources.md).
 
 ## related references
 
