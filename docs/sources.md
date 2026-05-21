@@ -1,6 +1,8 @@
-# sources
+# clock sources
 
-Where the data comes from, what was rejected, what's still on the table.
+Where the **clock** dataset's data comes from, what was rejected, what's still
+on the table. (tv/movie/book sources are scraped per-page and documented in
+[`sources/README.md`](../sources/README.md).)
 
 ## in the build
 
@@ -28,5 +30,5 @@ The open-source landscape is essentially one well-maintained dataset (JohannesNE
 ## future candidates
 
 - **[Hugging Face `gutenberg_time`](https://huggingface.co/datasets/community-datasets/gutenberg_time)** — 52K Gutenberg novels machine-annotated for time references at hour granularity. Big and independent. Needs a custom minute-extraction pass.
-- **Songs / movies / plays** — clocks dialog is everywhere in plays (Shakespeare's bell, Beckett's "Time enough"), film, and song lyrics. No structured datasets exist; would be curation from scratch.
-- **Urdu** (parked in [`sources/urdu.jsonl`](../sources/urdu.jsonl)) — 34 hand-curated, Rekhta-verified shers. Not yet wired into the build. Classical Urdu poetry uses time-of-day buckets (subah, sham, raat) rather than clock hours, so integration needs a small bucket→HH:MM mapping.
+- **Time mentions in plays / film / song** — clock dialog is everywhere (Shakespeare's bell, Beckett's "Time enough"). No structured datasets exist; would be curation from scratch. Note this is about *time-keyed* quotes for the clock dataset — general movie/tv quotes are their own datasets now.
+- **Urdu** (parked in [`sources/clock/urdu.jsonl`](../sources/clock/urdu.jsonl)) — 34 hand-curated, Rekhta-verified shers. Not yet wired into the build. Classical Urdu poetry uses time-of-day buckets (subah, sham, raat) rather than clock hours, so integration needs a small bucket→HH:MM mapping.

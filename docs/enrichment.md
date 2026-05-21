@@ -4,7 +4,7 @@ How we attach book metadata (covers, descriptions, links) to the quote dataset.
 
 ## current pipeline
 
-`src/enrich_books.py` walks `quotes.jsonl` for unique (title, author) pairs, looks each up against Open Library, writes `books.json` keyed by the **quote's title** (verbatim).
+`src/enrich_books.py` walks `dist/clock-quotes.json` for unique (title, author) pairs, looks each up against Open Library, writes `dist/books.json` keyed by the **quote's title** (verbatim).
 
 ```bash
 uv run python src/enrich_books.py             # fetch missing
@@ -12,7 +12,7 @@ uv run python src/enrich_books.py --recheck   # force re-fetch every pair
 uv run python src/enrich_books.py --limit 20  # try first N (for testing)
 ```
 
-Idempotent: rerunning only fetches pairs not already in `books.json`. Misses go to `books_misses.txt`.
+Idempotent: rerunning only fetches pairs not already in `dist/books.json`. Misses go to `dist/books_misses.txt`.
 
 ## why open library
 
@@ -38,7 +38,7 @@ What we save per book:
 
 ## key design decisions
 
-**Title-as-key.** `books["Slaughterhouse-Five"]` is the consumer API. Titles aren't globally unique (one collision in current data: *Honor Among Thieves* — Jeffrey Archer thriller vs Rachel Caine sci-fi), but in practice the collision rate is <0.1%. We last-write-wins on real collisions and log to `books_misses.txt`. Spurious "collisions" from author-name spelling variants (J.K. vs J. K. Rowling) are filtered by checking OLID equality — same OLID = same book.
+**Title-as-key.** `books["Slaughterhouse-Five"]` is the consumer API. Titles aren't globally unique (one collision in current data: *Honor Among Thieves* — Jeffrey Archer thriller vs Rachel Caine sci-fi), but in practice the collision rate is <0.1%. We last-write-wins on real collisions and log to `dist/books_misses.txt`. Spurious "collisions" from author-name spelling variants (J.K. vs J. K. Rowling) are filtered by checking OLID equality — same OLID = same book.
 
 **Work level only, not editions.** Open Library has Works (the abstract book) and Editions (specific printings). We stay at the Work level — `OLxxxxW`. The cover image we use is a representative edition's cover, returned in the search hit as `cover_i`.
 
@@ -60,7 +60,7 @@ What we save per book:
 
 **Kid-friendly blurbs via LLM.** OL descriptions are publisher marketing copy, written for adult literary readers. Sketched in earlier conversation: rewrite each book's blurb for a 12–14 year old in a family setting using a cheap model (DeepSeek, Haiku) via OpenRouter. Grounded on the OL description + 2–3 of our quotes from that book to constrain hallucination. Estimate: ~$3 one-time cost for the full set. Defer until we've seen what consumers actually want from the data.
 
-**Linkage refactor.** Long term, each entry in `quotes.jsonl` should carry `book_id: "OL98459W"` directly. That removes the title-as-key brittleness, eliminates the *Honor Among Thieves* collision case, and makes books-quotes a clean foreign-key relationship. Done as a build-time pass after enrichment: `build_quotes.py` reads `books.json`, looks up each quote's OLID by title, bakes it into the entry. Not done yet — wanted to see real enrichment data first.
+**Linkage refactor.** Long term, each clock entry should carry `book_id: "OL98459W"` directly. That removes the title-as-key brittleness, eliminates the *Honor Among Thieves* collision case, and makes book-to-quote a clean foreign-key relationship. Done as a build-time pass after enrichment: `clock.py` reads `dist/books.json`, looks up each quote's OLID by title, bakes it into the entry. Not done yet — wanted to see real enrichment data first.
 
 ## current state
 

@@ -1,6 +1,11 @@
 # Themed quotes — design note
 
-Status: **idea, not built**. This file captures the thinking so we can pick it up cleanly later.
+> **Status: mostly superseded.** The non-clock datasets are built — see the
+> `flat.py` pipeline (`tv`, `movie`, `book` types) and `AGENTS.md`. The repo
+> was renamed `curios`; outputs are per-type JSON files in `dist/`, not the
+> grouped `themed.json` sketched below. This file is kept for the design
+> reasoning that still holds — notably "why not merge into clock-quotes" and
+> the verification/curation open questions, which apply to the `book` dataset.
 
 ## Idea
 
@@ -88,7 +93,7 @@ Decide before building:
 1. **One `themed.json` or per-category files like `themed-science.json`?** — leaning one combined file with category grouping, but consumers fetching only one category would prefer per-category files (smaller, faster). Could do both.
 2. **Tag taxonomy** — open-ended free-form, or a controlled vocabulary? Free-form is easier to grow; controlled is easier to filter cleanly.
 3. **Verification policy** — every entry needs `source_url`? Or just LLM-curated ones? Or none?
-4. **Should the literary clock entries also appear in `themed.json` with `category: "literary"`?** — leaning no (different schemas), but a "literary" mode on the themed screen would be nice. Could be done by re-indexing `quotes.jsonl` at consumer time without duplicating data.
+4. **Should the literary clock entries also appear in `themed.json` with `category: "literary"`?** — leaning no (different schemas), but a "literary" mode on the themed screen would be nice. Could be done by re-indexing `clock-quotes.json` at consumer time without duplicating data.
 5. **Curation cadence** — append-as-I-think-of-them in a single `themed.jsonl`, or themed sprints (a week of "philosophy curation", then a week of "science")?
 
 ## Related work in this repo

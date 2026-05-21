@@ -1,27 +1,31 @@
-"""Take the verified upstream sources and produce the three output files.
+"""Literary-clock pipeline — minute-keyed quotes for building literary clocks.
 
-Reads from `sources/`, writes `quotes.json`, `quotes.jsonl`, `quotes.csv`,
-and `stats.json` at the repo root. Deterministic — a no-source-changed
-build produces a byte-identical diff.
+Reads the CSV snapshots in `sources/clock/`, dedups, splits each quote around
+its time phrase, writes `dist/clock-quotes.json` (keyed `HH:MM → entries`).
+Deterministic — a no-source-changed build produces a byte-identical diff.
 
-Usage:
-    uv run python src/build_quotes.py              # fetch + rebuild
-    uv run python src/build_quotes.py --no-fetch   # use the committed sources/
-    uv run python src/build_quotes.py --verify     # sanity-check the outputs
+Run via the `build.py` runner, or stand-alone:
+    uv run python src/clock.py            # fetch + rebuild
+    uv run python src/clock.py --no-fetch # use the committed sources/
 """
 
 import csv
 import json
 import re
 import sys
-import unicodedata
 import urllib.request
 from collections import defaultdict
-from pathlib import Path
 
-# src/build_quotes.py → repo root is one parent up.
-ROOT = Path(__file__).resolve().parents[1]
-SOURCES_DIR = ROOT / "sources"
+from common import (
+    DIST_DIR,
+    SOURCES_DIR,
+    clean_text,
+    normalize_for_key,
+    write_json,
+)
+
+CLOCK_DIR = SOURCES_DIR / "clock"
+OUTPUT = DIST_DIR / "clock-quotes.json"
 
 ALL_TIMES = [f"{h:02}:{m:02}" for h in range(24) for m in range(60)]
 ALL_TIMES_SET = set(ALL_TIMES)
@@ -31,13 +35,13 @@ ALL_TIMES_SET = set(ALL_TIMES)
 SOURCES = {
     "johannesne": {
         "url": "https://raw.githubusercontent.com/JohannesNE/literature-clock/master/litclock_annotated.csv",
-        "file": SOURCES_DIR / "johannesne.csv",
+        "file": CLOCK_DIR / "johannesne.csv",
         "has_header": False,
         "quoting": csv.QUOTE_NONE,
     },
     "scifi-fantasy": {
         "url": "https://raw.githubusercontent.com/brianpipa/literaryclock-scifi-fantasy/master/quote%20to%20image/scifi-fantasy.csv",
-        "file": SOURCES_DIR / "scifi-fantasy.csv",
+        "file": CLOCK_DIR / "scifi-fantasy.csv",
         "has_header": True,
         "quoting": csv.QUOTE_MINIMAL,
     },
@@ -45,7 +49,7 @@ SOURCES = {
 
 
 def fetch_all() -> None:
-    SOURCES_DIR.mkdir(exist_ok=True)
+    CLOCK_DIR.mkdir(parents=True, exist_ok=True)
     for name, cfg in SOURCES.items():
         print(f"Fetching {name}: {cfg['url']}")
         target = cfg["file"]
@@ -78,48 +82,14 @@ def load_source(name: str):
 # the row is malformed (a quote bled into this cell during CSV parsing).
 KNOWN_NSFW_TOKENS = {"", "sfw", "unknown", "nsfw", "nswf"}
 
-# Upstream CSV shape — both sources use this column order. Some rows lack
-# the trailing nsfw cell; we treat missing as "unknown".
-INPUT_COLUMNS = ("time", "time_phrase", "quote", "title", "author", "nsfw")
-
-
-_BR_TAG_RE = re.compile(r"<br\s*/?>", re.IGNORECASE)
-_ANY_TAG_RE = re.compile(r"<[^>]+>")
-_INLINE_WS_RE = re.compile(r"[^\S\n]+")
-_NON_ALNUM_RE = re.compile(r"[^a-z0-9]+")
-
-
-def clean_text(text: str) -> str:
-    """Strip HTML to plain text. <br> variants become real newlines; any other
-    tag (<b>, <font>, <time>, junk like <CChen0197>) is dropped but its inner
-    text is kept. Runs of inline whitespace are collapsed; newlines preserved.
-    """
-    text = _BR_TAG_RE.sub("\n", text)
-    text = _ANY_TAG_RE.sub("", text)
-    text = _INLINE_WS_RE.sub(" ", text)
-    return text.strip()
-
-
-def normalize_for_key(text: str) -> str:
-    """Aggressive normalization for dedup. Handles cross-source variation:
-    Unicode italic or fancy variants (𝘢𝘭𝘭𝘦𝘨𝘳𝘰 → allegro via NFKD), smart vs
-    straight quotes, and whitespace placement (e.g. "2:43:12am" vs "2:43:12
-    am" — same content, just different whitespace, both collapse to "24312am").
-    """
-    text = unicodedata.normalize("NFKD", text)
-    text = _NON_ALNUM_RE.sub("", text.lower())
-    return text
-
 
 def dedup_key(time: str, quote: str) -> tuple:
     """Stable dedup key. 120 chars of normalized quote — long enough to be
     distinctive, short enough that small prefix variations don't fragment it.
 
     Title is intentionally NOT part of the key — different sources spell the
-    same book differently ("1Q84" vs "1Q84, Book One", "Slaughterhouse-Five"
-    vs "Slaughterhouse 5", "Nineteen Eighty-Four" vs "1984"). At the same
-    minute, two different books practically never share the same first 120
-    normalized characters of quote text — so quote-prefix alone is enough.
+    same book differently. At the same minute, two different books practically
+    never share the same first 120 normalized characters of quote text.
     """
     return (time, normalize_for_key(quote)[:120])
 
@@ -135,13 +105,18 @@ def split_around_phrase(quote: str, time_phrase: str):
     return parts[0], parts[1]
 
 
-def normalize_nsfw(value: str) -> str:
+def rating_from_nsfw(value: str) -> str | None:
+    """Map the upstream nsfw column to a canonical rating. `nsfw` rows return
+    None — the caller drops them. `sfw` → `family` ("not explicit" is the
+    family tier; these aren't vetted specifically for young children).
+    Anything else → `unrated`.
+    """
     v = value.lower().strip()
     if v in ("nsfw", "nswf"):  # nswf is a typo in upstream
-        return "nsfw"
+        return None
     if v == "sfw":
-        return "sfw"
-    return "unknown"
+        return "family"
+    return "unrated"
 
 
 def process():
@@ -178,8 +153,8 @@ def process():
                 drops["invalid_time"] += 1
                 continue
 
-            nsfw = normalize_nsfw(nsfw_raw)
-            if nsfw == "nsfw":
+            rating = rating_from_nsfw(nsfw_raw)
+            if rating is None:
                 drops["dropped_nsfw"] += 1
                 continue
 
@@ -207,7 +182,7 @@ def process():
                 "after": after,
                 "title": title,
                 "author": author,
-                "nsfw": nsfw,
+                "rating": rating,
                 "lang": "en",
                 "source": source_name,
             }
@@ -222,42 +197,14 @@ def process():
     }
 
 
-CSV_COLUMNS = [
-    "time", "quote", "before", "time_phrase", "after",
-    "title", "author", "nsfw", "lang", "source",
-]
-
-
-def write_outputs(by_time, flat) -> None:
-    keyed = {t: by_time[t] for t in sorted(by_time)}
-    (ROOT / "quotes.json").write_text(
-        json.dumps(keyed, indent=2, ensure_ascii=False) + "\n",
-        encoding="utf-8",
-    )
-
-    flat_sorted = sorted(flat, key=lambda r: (r["time"], r["author"], r["title"]))
-    with (ROOT / "quotes.jsonl").open("w", encoding="utf-8") as f:
-        for entry in flat_sorted:
-            f.write(json.dumps(entry, ensure_ascii=False) + "\n")
-
-    # RFC 4180 CSV — embedded newlines in quote field are properly escaped
-    # by csv.writer. Pandas/polars/Excel handle this; naive line-by-line
-    # tools (awk -F,) will not. Use JSONL for those.
-    with (ROOT / "quotes.csv").open("w", encoding="utf-8", newline="") as f:
-        writer = csv.DictWriter(f, fieldnames=CSV_COLUMNS, extrasaction="ignore")
-        writer.writeheader()
-        for entry in flat_sorted:
-            writer.writerow(entry)
-
-
-def write_stats(by_time, flat, build_info) -> dict:
+def stats(by_time, flat, build_info) -> dict:
     counts = sorted([len(v) for v in by_time.values()], reverse=True)
     covered = set(by_time.keys())
     missing = sorted(ALL_TIMES_SET - covered)
 
-    nsfw_counts: dict[str, int] = defaultdict(int)
+    rating_counts: dict[str, int] = defaultdict(int)
     for e in flat:
-        nsfw_counts[e["nsfw"]] += 1
+        rating_counts[e["rating"]] += 1
 
     busiest = sorted(
         [(t, len(v)) for t, v in by_time.items()],
@@ -265,7 +212,7 @@ def write_stats(by_time, flat, build_info) -> dict:
         reverse=True,
     )[:5]
 
-    stats = {
+    return {
         "total_entries": len(flat),
         "minutes_covered": len(covered),
         "minutes_total": len(ALL_TIMES),
@@ -279,7 +226,7 @@ def write_stats(by_time, flat, build_info) -> dict:
             "max_per_minute": counts[0] if counts else 0,
             "busiest_minutes": [{"time": t, "count": c} for t, c in busiest],
         },
-        "nsfw_breakdown": dict(nsfw_counts),
+        "rating_breakdown": dict(rating_counts),
         "by_source": build_info["kept_by_source"],
         "build_drops": build_info["drops_by_source"],
         "split_failures": build_info["split_failures"],
@@ -287,70 +234,31 @@ def write_stats(by_time, flat, build_info) -> dict:
             {"name": name, "url": cfg["url"]} for name, cfg in SOURCES.items()
         ],
     }
-    (ROOT / "stats.json").write_text(json.dumps(stats, indent=2) + "\n", encoding="utf-8")
-    return stats
 
 
-def report(stats: dict) -> None:
-    print()
-    print(f"Entries:    {stats['total_entries']:,}")
-    print(f"By source:  {stats['by_source']}")
-    print(f"Coverage:   {stats['minutes_covered']}/{stats['minutes_total']} ({stats['coverage_pct']}%)")
-    if stats["missing_minutes"]:
-        print(f"Missing:    {len(stats['missing_minutes'])} minutes — {stats['missing_minutes']}")
-    d = stats["distribution"]
+def report(st: dict) -> None:
+    print(f"clock:      {st['total_entries']:,} entries")
+    print(f"  by source:  {st['by_source']}")
     print(
-        f"Per-minute: 1={d['single']}  2={d['two']}  3+={d['three_plus']}  "
+        f"  coverage:   {st['minutes_covered']}/{st['minutes_total']} "
+        f"({st['coverage_pct']}%)"
+    )
+    if st["missing_minutes"]:
+        print(f"  missing:    {len(st['missing_minutes'])} minutes")
+    d = st["distribution"]
+    print(
+        f"  per-minute: 1={d['single']}  2={d['two']}  3+={d['three_plus']}  "
         f">5={d['more_than_five']}  max={d['max_per_minute']}"
     )
-    print(f"NSFW kept:  {stats['nsfw_breakdown']}")
-    print(f"Drops:      {stats['build_drops']}")
-    if stats["split_failures"]:
-        print(f"Split fails: {stats['split_failures']}")
+    print(f"  ratings:    {st['rating_breakdown']}")
+    print(f"  drops:      {st['build_drops']}")
+    if st["split_failures"]:
+        print(f"  split fails: {st['split_failures']}")
 
 
-def verify() -> None:
-    keyed = json.loads((ROOT / "quotes.json").read_text(encoding="utf-8"))
-    flat = [
-        json.loads(line)
-        for line in (ROOT / "quotes.jsonl").read_text(encoding="utf-8").splitlines()
-        if line
-    ]
-    with (ROOT / "quotes.csv").open(encoding="utf-8", newline="") as f:
-        csv_rows = list(csv.DictReader(f))
-
-    keyed_total = sum(len(v) for v in keyed.values())
-    if keyed_total != len(flat):
-        sys.exit(f"FAIL: quotes.json has {keyed_total} entries, quotes.jsonl has {len(flat)}")
-    if len(csv_rows) != len(flat):
-        sys.exit(f"FAIL: quotes.csv has {len(csv_rows)} rows, quotes.jsonl has {len(flat)}")
-
-    required = {"quote", "before", "time_phrase", "after", "title", "author", "nsfw", "lang", "source"}
-    valid_sources = set(SOURCES)
-    for time, entries in keyed.items():
-        if not re.match(r"^\d{2}:\d{2}$", time):
-            sys.exit(f"FAIL: bad time key {time!r}")
-        for e in entries:
-            missing = required - e.keys()
-            if missing:
-                sys.exit(f"FAIL: {time} entry missing keys {missing}")
-            if e["source"] not in valid_sources:
-                sys.exit(f"FAIL: {time} entry has unknown source {e['source']!r}")
-            # before is None iff after is None — both indicate the time
-            # phrase couldn't be located in the quote text. Consumers must
-            # null-check before string-concatenating.
-            if (e["before"] is None) != (e["after"] is None):
-                sys.exit(f"FAIL: {time} entry has before/after nullability mismatch")
-
-    print(f"verify ok — {len(keyed)} minutes, {len(flat)} entries (json+jsonl+csv consistent)")
-
-
-def main() -> None:
-    args = sys.argv[1:]
-    if "--verify" in args:
-        verify()
-        return
-    if "--no-fetch" not in args:
+def build(fetch: bool = True) -> dict:
+    """Build `dist/clock-quotes.json`. Returns the per-type stats dict."""
+    if fetch:
         fetch_all()
     else:
         for name, cfg in SOURCES.items():
@@ -358,10 +266,43 @@ def main() -> None:
                 sys.exit(f"--no-fetch given but {cfg['file']} does not exist")
 
     by_time, flat, info = process()
-    write_outputs(by_time, flat)
-    stats = write_stats(by_time, flat, info)
-    report(stats)
+    keyed = {t: by_time[t] for t in sorted(by_time)}
+    write_json(OUTPUT, keyed)
+    st = stats(by_time, flat, info)
+    report(st)
+    return st
+
+
+def verify() -> None:
+    keyed = json.loads(OUTPUT.read_text(encoding="utf-8"))
+    required = {
+        "quote", "before", "time_phrase", "after",
+        "title", "author", "rating", "lang", "source",
+    }
+    valid_sources = set(SOURCES)
+    total = 0
+    for time, entries in keyed.items():
+        if not re.match(r"^\d{2}:\d{2}$", time):
+            sys.exit(f"FAIL: bad time key {time!r}")
+        for e in entries:
+            total += 1
+            missing = required - e.keys()
+            if missing:
+                sys.exit(f"FAIL: {time} entry missing keys {missing}")
+            if e["source"] not in valid_sources:
+                sys.exit(f"FAIL: {time} entry has unknown source {e['source']!r}")
+            if e["rating"] not in ("family", "unrated"):
+                sys.exit(f"FAIL: {time} entry has bad rating {e['rating']!r}")
+            # before is None iff after is None — both indicate the time
+            # phrase couldn't be located. Consumers must null-check.
+            if (e["before"] is None) != (e["after"] is None):
+                sys.exit(f"FAIL: {time} entry has before/after nullability mismatch")
+    print(f"clock verify ok — {len(keyed)} minutes, {total} entries")
 
 
 if __name__ == "__main__":
-    main()
+    args = sys.argv[1:]
+    if "--verify" in args:
+        verify()
+    else:
+        build(fetch="--no-fetch" not in args)

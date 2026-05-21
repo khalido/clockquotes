@@ -1,10 +1,18 @@
 [project]
-name = "clockquotes"
+name = "curios"
 version = "0.1.0"
-description = "Minute-keyed literary quotes for building literary clocks"
+description = "A curated library of content datasets for dashboards and daily briefs"
 readme = "README.md"
 requires-python = ">=3.14"
 license = { file = "LICENSE" }
 dependencies = [
     "httpx>=0.28.1",
+]
+
+# Scraping deps — used only by the one-off `sources/<type>/fetch_*.py`
+# scripts, never by the build. Install with `uv sync --group scrape`.
+[dependency-groups]
+scrape = [
+    "beautifulsoup4>=4.12",
+    "lxml>=5.0",
 ]

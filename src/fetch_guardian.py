@@ -10,14 +10,15 @@ this list (~600 entries here vs ~3,600 there). We keep a copy in `sources/`
 so the dataset is preserved if the Guardian ever takes the page down.
 
 Run:
-    uv run sources/fetch_guardian.py
+    uv run src/fetch_guardian.py
 """
 
-from pathlib import Path
 import pandas as pd
 
+from common import SOURCES_DIR
+
 URL = "https://www.theguardian.com/books/table/2011/apr/21/literary-clock"
-OUT = Path(__file__).resolve().parent / "guardian-2011.csv"
+OUT = SOURCES_DIR / "clock" / "guardian-2011.csv"
 
 
 def main() -> None:

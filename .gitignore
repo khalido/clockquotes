@@ -3,6 +3,10 @@ __pycache__/
 .venv/
 .DS_Store
 
+# dist/ holds this repo's committed datasets — it is NOT a throwaway build
+# dir. Override any global `dist/` ignore so the outputs stay tracked.
+!dist/
+
 # Working artifact — list of books we couldn't enrich on the latest run.
 # Reproducible from a fresh sweep; not a committed output.
-books_misses.txt
+dist/books_misses.txt

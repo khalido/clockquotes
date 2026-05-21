@@ -1,9 +1,9 @@
-"""Enrich the quote dataset with Open Library metadata.
+"""Enrich the clock quote dataset with Open Library metadata.
 
-Idempotent: walks `quotes.jsonl` for unique (title, author) pairs, looks each
-up against Open Library, writes `books.json` keyed by Open Library work ID.
-On reruns, only fetches pairs that aren't already enriched. Misses (no
-confident match) get logged to `books_misses.txt` for manual review.
+Idempotent: walks `dist/clock-quotes.json` for unique (title, author) pairs,
+looks each up against Open Library, writes `dist/books.json` keyed by Open
+Library work ID. On reruns, only fetches pairs that aren't already enriched.
+Misses (no confident match) get logged to `dist/books_misses.txt`.
 
 Usage:
     uv run python src/enrich_books.py             # fetch missing
@@ -21,15 +21,16 @@ from pathlib import Path
 import httpx
 
 ROOT = Path(__file__).resolve().parents[1]
-QUOTES_JSONL = ROOT / "quotes.jsonl"
-BOOKS_JSON = ROOT / "books.json"
-MISSES_TXT = ROOT / "books_misses.txt"
+DIST_DIR = ROOT / "dist"
+CLOCK_QUOTES = DIST_DIR / "clock-quotes.json"
+BOOKS_JSON = DIST_DIR / "books.json"
+MISSES_TXT = DIST_DIR / "books_misses.txt"
 
 OL_BASE = "https://openlibrary.org"
 COVER_BASE = "https://covers.openlibrary.org/b/id"
 
 # Politeness — OL asks for a real UA so they can contact us if we misbehave.
-USER_AGENT = "clockquotes-enrich/0.1 (https://github.com/khalido/clockquotes)"
+USER_AGENT = "curios-enrich/0.1 (https://github.com/khalido/curios)"
 
 SEARCH_FIELDS = ",".join([
     "key", "title", "author_name", "cover_i",
@@ -154,11 +155,11 @@ def enrich_one(client: httpx.Client, our_title: str, our_author: str) -> dict | 
 
 
 def collect_unique_pairs(path: Path) -> list[tuple[str, str]]:
-    """Walk quotes.jsonl, return (title, author) pairs in first-seen order."""
+    """Walk clock-quotes.json, return (title, author) pairs in sorted order."""
+    keyed = json.loads(path.read_text(encoding="utf-8"))
     seen: dict[tuple[str, str], None] = {}
-    with path.open() as f:
-        for line in f:
-            e = json.loads(line)
+    for time in sorted(keyed):
+        for e in keyed[time]:
             seen.setdefault((e["title"], e["author"]), None)
     return list(seen)
 
@@ -174,8 +175,8 @@ def main() -> None:
     if BOOKS_JSON.exists():
         books = json.loads(BOOKS_JSON.read_text(encoding="utf-8"))
 
-    pairs = collect_unique_pairs(QUOTES_JSONL)
-    print(f"Unique (title, author) pairs in quotes.jsonl: {len(pairs):,}")
+    pairs = collect_unique_pairs(CLOCK_QUOTES)
+    print(f"Unique (title, author) pairs in clock-quotes.json: {len(pairs):,}")
 
     # Skip pairs we've already resolved. We dedup on (title, author) — the
     # title alone isn't enough because two books can share a title (e.g.
