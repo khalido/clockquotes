@@ -2,9 +2,7 @@
 
 A curated library of content datasets for dashboards, kiosks, and daily briefs. Each dataset is a plain JSON file in `dist/` — anyone can grab one and wire it in. No accounts, no API.
 
-The built datasets today are all quote types (clock, tv, with movie/book planned). The project scope is broader — puzzles, facts, and trivia are planned (see roadmap); the name `curios` reflects that, not just quotes.
-
-(The local repo folder may still be named `clockquotes` — the project and the GitHub repo are now `curios`. The clock dataset is the original and most mature.)
+The built datasets today are all quote types (clock, tv, comic, with movie/book planned). The project scope is broader — puzzles, facts, and trivia are planned (see roadmap); the name `curios` reflects that, not just quotes. The clock dataset is the original and most mature.
 
 ## the datasets
 
@@ -94,7 +92,7 @@ uv run python src/build.py --no-fetch      # use committed clock sources/
 uv run python src/build.py --verify        # sanity-check the outputs
 ```
 
-Only the clock build fetches from the network (its two upstream CSVs). The tv/movie/book builds only ever read committed `sources/<type>/*.jsonl` snapshots — scraping happens out of band (see below). The build is deterministic: a no-source-changed run produces a byte-identical diff. Every output is sorted.
+Only the clock build fetches from the network (its two upstream CSVs). The tv/comic/movie/book builds only ever read committed `sources/<type>/*.jsonl` snapshots — scraping happens out of band (see below). The build is deterministic: a no-source-changed run produces a byte-identical diff. Every output is sorted.
 
 `dist/stats.json` aggregates per-dataset counts. An `--only` build merges into the existing file rather than dropping the other datasets' stats.
 
@@ -118,7 +116,7 @@ Scrapers may use dependencies the build can't — they live in the `scrape` depe
 
 ## conventions
 
-- The build core (`build.py`, `clock.py`, `flat.py`, `common.py`) is stdlib-only — it reads committed snapshots, never the network for tv/movie/book. The clock fetch uses `urllib`. Scrapers and `enrich_books.py` may take deps; add via `uv add` (`--group scrape` for scrapers).
+- The build core (`build.py`, `clock.py`, `flat.py`, `common.py`) is stdlib-only — it reads committed snapshots, never the network for tv/comic/movie/book. The clock fetch uses `urllib`. Scrapers and `enrich_books.py` may take deps; add via `uv add` (`--group scrape` for scrapers).
 - Snapshots in `sources/` are committed so the build reproduces offline.
 - Outputs stay deterministic and sorted.
 - One output format per dataset: JSON. (No jsonl/csv — a `--csv` flag is a one-function add if a consumer ever needs it.)
@@ -142,4 +140,4 @@ No half-finished features. In declining order of value-per-effort:
 - [`docs/build-notes.md`](docs/build-notes.md) — pipeline internals, how to add a source.
 - [`docs/enrichment.md`](docs/enrichment.md) — Open Library book enrichment, design decisions.
 - [`docs/themed-quotes.md`](docs/themed-quotes.md) — original design draft for the non-clock datasets; mostly superseded now that the flat pipeline is built.
-- [`sources/README.md`](sources/README.md) — what's in `sources/` and how each snapshot is fetched.
+- [`sources/README.md`](sources/README.md) — what's in `sources/` and where each snapshot comes from.
