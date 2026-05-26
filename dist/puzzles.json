@@ -1,0 +1,511 @@
+[
+  {
+    "question": "This thing devours all things — birds and beasts, trees and flowers. It gnaws iron and bites through steel, grinds hard stone into meal, lays kings low, ruins towns, and beats mountains down. What is it?",
+    "answer": "Time. Nothing material survives it: rust eats iron, weather wears stone to sand, empires fall, mountains erode. The clues are all forms of slow destruction that no force but time can manage.",
+    "category": "classic",
+    "rating": "family",
+    "source": "curios-opus-4.7",
+    "attribution": "Tolkien-style (folk riddle of the same kind, not Tolkien verbatim)",
+    "lang": "en"
+  },
+  {
+    "question": "What walks on four legs in the morning, two legs at noon, and three legs in the evening?",
+    "answer": "A human being. The 'day' is a whole life: a baby crawls on all fours, an adult walks upright, and an elder leans on a cane. Morning, noon, and evening stand in for the stages of life.",
+    "category": "classic",
+    "rating": "family",
+    "source": "curios-opus-4.7",
+    "attribution": "Sphinx (Oedipus)",
+    "lang": "en"
+  },
+  {
+    "question": "A drawer holds 10 red socks and 10 blue socks, all mixed up. In the dark, how many socks must you pull out to be sure you have a matching pair?",
+    "answer": "3. With only 2 colours, by the third sock you must have repeated one — pigeonhole. Two socks could be one of each colour, but a third forces a match.",
+    "category": "counting",
+    "rating": "kids",
+    "source": "curios-opus-4.7",
+    "attribution": "classic",
+    "lang": "en"
+  },
+  {
+    "question": "How many distinct rearrangements are there of the letters in MISSISSIPPI?",
+    "answer": "34,650. It's 11 letters with 1 M, 4 I's, 4 S's, 2 P's, so 11! / (1! 4! 4! 2!) = 39,916,800 / 1,152 = 34,650. Dividing by the factorials of the repeat counts cancels the rearrangements that look identical.",
+    "category": "counting",
+    "rating": "family",
+    "source": "curios-opus-4.7",
+    "attribution": "classic",
+    "lang": "en"
+  },
+  {
+    "question": "How many squares of any size are on a standard 8x8 chessboard?",
+    "answer": "204. Count by size: 64 single squares (8x8 positions), 49 2x2 squares (7x7 positions), 36 3x3, 25, 16, 9, 4, 1. That's 8^2 + 7^2 + ... + 1^2 = 204.",
+    "category": "counting",
+    "rating": "family",
+    "source": "curios-opus-4.7",
+    "attribution": "classic",
+    "lang": "en"
+  },
+  {
+    "question": "In a 24-hour day, how many times do the hour and minute hands of a clock overlap exactly?",
+    "answer": "22 times. In a day the minute hand goes around 24 times; the hour hand goes around twice. The minute hand laps the hour hand 24 - 2 = 22 times. The trap is guessing 24 because you forget the hour hand is also moving — the meetings drift, taking just over 65 minutes apart, so they don't all land neatly on the hour marks.",
+    "category": "counting",
+    "rating": "family",
+    "source": "curios-opus-4.7",
+    "attribution": "classic",
+    "lang": "en"
+  },
+  {
+    "question": "Ten people at a party each shake hands once with every other person. How many handshakes happen in total?",
+    "answer": "45. Each pair shakes once, so the answer is the number of pairs from 10 people: C(10,2) = 10x9/2 = 45. The /2 is because A-shakes-B is the same handshake as B-shakes-A.",
+    "category": "counting",
+    "rating": "family",
+    "source": "curios-opus-4.7",
+    "attribution": "classic",
+    "lang": "en"
+  },
+  {
+    "question": "A hunter walks 1 km due south, then 1 km due east, then 1 km due north — and finds herself back where she started. What colour is the bear she sees there?",
+    "answer": "White. To return to the start after walking south, east, and north for equal distances, she must have started at the North Pole: walking south takes her down a meridian, walking east takes her along a circle of latitude (which loops back on itself), and walking north brings her back up the same meridian to the Pole. The only bears living at the North Pole are polar bears. (Pedant's note: there are also rings near the South Pole where this works geometrically, but no bears live there.)",
+    "category": "geometry",
+    "rating": "family",
+    "source": "curios-opus-4.7",
+    "attribution": "classic",
+    "lang": "en"
+  },
+  {
+    "question": "A standard soccer ball is stitched from black pentagons and white hexagons. There are 20 hexagons. How many pentagons must there be?",
+    "answer": "Exactly 12, and it has to be 12 — no choice. A soccer ball is a truncated icosahedron, a convex polyhedron, so it obeys Euler's formula V - E + F = 2. Count carefully: every pentagon edge is shared with a hexagon, and every vertex is the meeting of two hexagons and one pentagon. Working through the algebra, the hexagons cancel out and you're forced to have 12 pentagons regardless of how many hexagons you add. That's why every soccer ball, every fullerene molecule (C60), and every geodesic dome built this way has exactly 12 pentagonal panels.",
+    "category": "geometry",
+    "rating": "family",
+    "source": "curios-opus-4.7",
+    "lang": "en"
+  },
+  {
+    "question": "An ant at the bottom corner of a tin can wants to walk on the outside surface to the point diametrically opposite at the top. The can is 10 cm tall and 10 cm in circumference. What's the shortest path, and how long is it?",
+    "answer": "About 11.18 cm. Cut the can open along the vertical line through the starting corner and unroll it flat — the curved side becomes a 10-cm-tall, 10-cm-wide rectangle. The ant's target sits halfway across (5 cm) and at the top (10 cm). A straight line on the flat sheet is sqrt(5^2 + 10^2) = sqrt(125) ~ 11.18 cm. When you roll the rectangle back into a cylinder, that straight line becomes a graceful spiral on the surface — and it's still the shortest route, because a cylinder is intrinsically flat (zero Gaussian curvature) and shortest lines on flat surfaces are straight lines.",
+    "category": "geometry",
+    "rating": "family",
+    "source": "curios-opus-4.7",
+    "lang": "en"
+  },
+  {
+    "question": "A man lives on the tenth floor of a tall building. Every morning he takes the elevator down to the ground floor. When he comes home in the evening, he takes the elevator to the seventh floor and walks up the last three flights — unless it's raining, or someone else is in the elevator with him, in which case he rides all the way up. Why?",
+    "answer": "He's short. He can reach the ground-floor button easily, but the highest button he can reach himself is the 7th floor. If it's raining, he has an umbrella to poke the 10 button with. If someone else is in the elevator, he asks them to press it. The puzzle hides one fact in plain sight: nothing said the man is tall.",
+    "category": "lateral",
+    "rating": "family",
+    "source": "curios-opus-4.7",
+    "attribution": "classic",
+    "lang": "en"
+  },
+  {
+    "question": "A man marries many women, one after another, and never divorces any of them — yet he is not a polygamist and breaks no law. How?",
+    "answer": "He's a minister (or priest, rabbi, judge — anyone who performs weddings). He marries the women to other people, not to himself. The trap is reading 'marries' as 'becomes the husband of' when it can also mean 'officiates the wedding of'.",
+    "category": "lateral",
+    "rating": "family",
+    "source": "curios-opus-4.7",
+    "attribution": "classic",
+    "lang": "en"
+  },
+  {
+    "question": "A man pushes his car up to a hotel and immediately realises he's bankrupt. Why?",
+    "answer": "He's playing Monopoly. His token (the car) has landed on a square with a hotel he can't afford. The puzzle works because every detail — pushing the car, the hotel, going bankrupt — sounds like a real-life crisis, but they're literal moves in a board game.",
+    "category": "lateral",
+    "rating": "kids",
+    "source": "curios-opus-4.7",
+    "attribution": "classic",
+    "lang": "en"
+  },
+  {
+    "question": "At dawn on Monday, a monk starts climbing a narrow mountain path. He climbs at his own pace, stopping to rest, and reaches the summit by sunset. He stays overnight. At dawn on Tuesday, he walks back down the same path at his own pace, again reaching the bottom by sunset. Prove that there is some spot on the path he passes at exactly the same time of day on both trips.",
+    "answer": "Imagine two monks instead: one climbing up on Monday, one walking down on Tuesday — but picture both journeys happening on the same day. They start at opposite ends of the path at dawn and finish at opposite ends by sunset. They must cross paths somewhere in the middle. That crossing point is the same spot at the same time of day. The trick is reframing one monk on two days as two monks on one day.",
+    "category": "lateral",
+    "rating": "family",
+    "source": "curios-opus-4.7",
+    "attribution": "classic",
+    "lang": "en"
+  },
+  {
+    "question": "First you throw away my outside, then cook my inside. Then you eat my outside, and throw away my inside. What am I?",
+    "answer": "Corn on the cob. You strip the husk (outside) and boil the kernels (inside). Then you eat the kernels — which are now on the outside of the cob — and throw away the cob (inside).",
+    "category": "lateral",
+    "rating": "kids",
+    "source": "curios-opus-4.7",
+    "attribution": "classic",
+    "lang": "en"
+  },
+  {
+    "question": "A farmer must get a fox, a chicken, and a sack of grain across a river. His boat fits only him and one item. If left alone together, the fox will eat the chicken and the chicken will eat the grain. How does he get all three across?",
+    "answer": "Take the chicken across; come back alone. Take the fox across; bring the chicken back. Take the grain across; come back alone. Finally, take the chicken across. The chicken is the troublemaker — pair it with nothing on either bank. The key move is the return trip with the chicken, which most solvers forget is allowed.",
+    "category": "logic",
+    "rating": "kids",
+    "source": "curios-opus-4.7",
+    "attribution": "classic",
+    "lang": "en"
+  },
+  {
+    "question": "Three switches outside a sealed room are wired to three bulbs inside. You can flip the switches as much as you like, but you may only open the door once. How do you tell which switch controls which bulb?",
+    "answer": "Turn switch 1 on and leave it for several minutes. Turn it off, then turn switch 2 on, and leave switch 3 off. Open the door. The lit bulb is switch 2's. The dark-but-warm bulb is switch 1's (it was on long enough to heat up). The dark-and-cold bulb is switch 3's. The trick is realising heat carries extra information past a closed door.",
+    "category": "logic",
+    "rating": "family",
+    "source": "curios-opus-4.7",
+    "attribution": "classic",
+    "lang": "en"
+  },
+  {
+    "question": "Two guards stand at a fork in the road. One path leads to safety, one to a pit. One guard always tells the truth, the other always lies — and you don't know which is which. You may ask one guard one yes-or-no question. What do you ask?",
+    "answer": "Point at either path and ask either guard, \"If I asked the OTHER guard whether this path leads to safety, would they say yes?\" Then take the OPPOSITE path of whatever answer you get. Why it works: exactly one of the two guards lies, so the answer is filtered through exactly one lie either way — making it reliably wrong. Flipping it gives you the truth.",
+    "category": "logic",
+    "rating": "family",
+    "source": "curios-opus-4.7",
+    "attribution": "Smullyan",
+    "lang": "en"
+  },
+  {
+    "question": "You have twelve coins that look identical. Eleven weigh the same; one is a fake, but you don't know whether it's heavier or lighter than the others. Using a balance scale only three times, how do you find the fake and tell whether it's heavy or light?",
+    "answer": "Possible — but barely. Each weighing has three outcomes (left tips, right tips, balance), so three weighings carry 3x3x3 = 27 distinct messages. You need to distinguish 12 coins x 2 (heavy or light) = 24 cases — and 27 just clears it. One strategy: split into three groups of four. Weigh A vs B. If balanced, the fake is in C; weigh three of C against three knowns — balanced means the last C coin is fake, otherwise you've learnt the direction and have three suspects, one more weighing pins it. If A vs B tips, your next weighing swaps some A-coins with some B-coins and adds known-good fillers — the new tilt (same way, reversed, or balanced) narrows you to a tiny set with heavy/light already locked. Worth working out together — half the fun is the case tree.",
+    "category": "logic",
+    "rating": "family",
+    "source": "curios-opus-4.7",
+    "attribution": "classic",
+    "lang": "en"
+  },
+  {
+    "question": "You have two ropes. Each one burns for exactly 60 minutes from end to end, but they burn unevenly — one half might take 10 minutes, the other 50. Using only a lighter, how do you measure exactly 45 minutes?",
+    "answer": "Light rope A at both ends and rope B at one end at the same moment. Rope A finishes in 30 minutes (no matter how unevenly it burns, the two flames must meet after consuming the whole 60-minute rope). The instant it does, light rope B's other end. Rope B had 30 minutes of burn left; with both ends lit, that takes 15 minutes. 30 + 15 = 45.",
+    "category": "logic",
+    "rating": "family",
+    "source": "curios-opus-4.7",
+    "attribution": "classic",
+    "lang": "en"
+  },
+  {
+    "question": "You meet two islanders. Knights always tell the truth; knaves always lie. Alex says, \"At least one of us is a knave.\" What are Alex and Blair?",
+    "answer": "Alex is a knight and Blair is a knave. Suppose Alex were a knave: then his statement \"at least one of us is a knave\" would be true — but knaves can't say true things. Contradiction. So Alex is a knight, his statement is true, and since Alex himself is not a knave, Blair must be.",
+    "category": "logic",
+    "rating": "family",
+    "source": "curios-opus-4.7",
+    "attribution": "Smullyan",
+    "lang": "en"
+  },
+  {
+    "question": "A boy was found at the school's lost-and-found counter holding a wallet. \"I just found it on the floor by the lockers,\" he said. \"I was bringing it straight here.\" The wallet's owner had reported it lost an hour earlier and described every card and note inside — and everything was still there. So how did the office assistant know the boy hadn't really just found it?",
+    "answer": "The wallet was bone dry — but it had been pouring rain for the past hour, and the lockers were right next to a doorway where the floor was visibly wet from people coming in. A wallet truly dropped near the lockers an hour ago would have been damp at the edges. The boy had picked it up earlier, somewhere dry, and only decided to hand it in once he heard the owner was searching.",
+    "category": "mystery",
+    "rating": "family",
+    "source": "curios-opus-4.7",
+    "lang": "en"
+  },
+  {
+    "question": "At the science fair, Lila's prize-winning volcano lay in pieces on the floor. Mr Okafor pulled three classmates aside and said only, \"Lila's volcano has been damaged — do any of you know how?\" Sam said, \"I was in the cafeteria all lunch — I didn't even know it had been smashed until just now.\" Priya said, \"I saw it from across the hall but I didn't go near it.\" Theo said, \"I walked past it but it was already broken.\" Mr Okafor knew straight away who did it. Who, and how?",
+    "answer": "Sam. Mr Okafor only said the volcano was 'damaged' — that could mean knocked over, dented, anything. Sam said he hadn't known it was 'smashed' until just now — but nobody had told him that. The detail he shouldn't have known gave him away. A guilty person often knows one too many.",
+    "category": "mystery",
+    "rating": "family",
+    "source": "curios-opus-4.7",
+    "lang": "en"
+  },
+  {
+    "question": "Inspector Wells visited Mr Hartley, who said burglars had broken in overnight and stolen his coin collection. \"I was reading in bed when I heard the window smash downstairs. I switched off my lamp at once so they wouldn't know anyone was home, then crept to the top of the stairs and watched them in the moonlight as they emptied the case.\" The inspector arrested Mr Hartley on the spot. What gave him away?",
+    "answer": "If Mr Hartley had really switched off his lamp first, his eyes would have needed several minutes to adjust to the dark — he couldn't have crept straight to the stairs and watched burglars in dim moonlight without bumping into things or being seen himself. More tellingly, a person who'd just switched off a bright lamp would be nearly blind in moonlight for a while. The story is too smooth: he describes the burglars in detail he couldn't have seen.",
+    "category": "mystery",
+    "rating": "family",
+    "source": "curios-opus-4.7",
+    "lang": "en"
+  },
+  {
+    "question": "Mrs Pemberton reported her diamond ring stolen. \"I took it off and set it on the windowsill while I washed the dishes,\" she told the constable. \"When I looked up, the window was open and the ring was gone. The thief must have reached right in from the garden.\" The constable looked at the windowsill, then at the garden outside, and told her gently that no one had reached in from outside. How did he know?",
+    "answer": "The windowsill was undisturbed — but more importantly, the flowerbed directly beneath the open window had no footprints, no crushed plants, nothing. A thief reaching in would have had to stand right there. Either the ring fell behind something inside (most likely) or Mrs Pemberton was mistaken about leaving it on the sill. Encyclopaedia-Brown rule: an outside thief leaves outside evidence.",
+    "category": "mystery",
+    "rating": "family",
+    "source": "curios-opus-4.7",
+    "lang": "en"
+  },
+  {
+    "question": "I am a two-digit number. The sum of my digits is 12, and if you reverse my digits the new number is 18 more than I am. What number am I?",
+    "answer": "57. If the digits are a (tens) and b (units), then a + b = 12 and (10b + a) - (10a + b) = 18, so 9(b - a) = 18, meaning b - a = 2. With a + b = 12 and b - a = 2, you get a = 5, b = 7. The number is 57.",
+    "category": "number-theory",
+    "rating": "family",
+    "source": "curios-opus-4.7",
+    "attribution": "classic",
+    "lang": "en"
+  },
+  {
+    "question": "What is the smallest positive whole number that is divisible by every integer from 1 to 10?",
+    "answer": "2520. You need the least common multiple of 1 through 10. The prime-power ceiling for each prime up to 10 is 2^3 (from 8), 3^2 (from 9), 5, and 7. Multiply: 8 x 9 x 5 x 7 = 2520.",
+    "category": "number-theory",
+    "rating": "family",
+    "source": "curios-opus-4.7",
+    "attribution": "classic",
+    "lang": "en"
+  },
+  {
+    "question": "A penny is dropped from the top of the Empire State Building (about 380 m). When it hits the ground, will it punch through the pavement, kill someone, or barely sting?",
+    "answer": "It barely stings. A penny is light and flat, so air resistance catches up with gravity very quickly — it reaches terminal velocity (about 40 km/h, or 25 mph) after only about 15 m of fall. After that it doesn't speed up no matter how far it has left to drop, and it flutters down like a leaf. At 40 km/h a 2.5-gram penny carries far too little energy to do real damage; it would feel like being flicked. The 'penny from a skyscraper kills' story is a myth.",
+    "category": "physics",
+    "rating": "family",
+    "source": "curios-opus-4.7",
+    "lang": "en"
+  },
+  {
+    "question": "Two trains are 100 km apart on the same track, heading toward each other at 50 km/h each. A fly starts on the nose of one train flying 75 km/h, bounces off the other train, comes back, bounces off the first train, and keeps zigzagging until the trains meet. How far does the fly fly in total?",
+    "answer": "75 km. The hard way is to add up the infinite series of shrinking back-and-forth trips. The easy way: the trains close the 100 km gap at a combined 100 km/h, so they meet in exactly 1 hour. The fly was in the air, flying at 75 km/h, for that whole hour. 75 km/h x 1 h = 75 km. (Famously, when this was posed to John von Neumann he answered instantly. The questioner said 'ah, you saw the trick' — von Neumann said 'what trick? I just summed the series.')",
+    "category": "physics",
+    "rating": "family",
+    "source": "curios-opus-4.7",
+    "attribution": "von Neumann",
+    "lang": "en"
+  },
+  {
+    "question": "You have one raw egg and one hard-boiled egg, identical from the outside. Without cracking them, how can you tell which is which?",
+    "answer": "Spin them on a flat surface. The hard-boiled egg is solid all the way through — shell and insides spin together as one rigid body, so it spins fast and smoothly. The raw egg has a liquid yolk and white inside; when you spin the shell, the liquid lags behind due to its inertia, sloshes around, and shifts the centre of mass, so it wobbles and spins much more slowly. Bonus test: briefly stop each egg with a fingertip and let go. The boiled egg stays stopped. The raw egg starts moving again on its own — the liquid inside was still spinning even after you stopped the shell.",
+    "category": "physics",
+    "rating": "family",
+    "source": "curios-opus-4.7",
+    "lang": "en"
+  },
+  {
+    "question": "You're in a car holding the string of a helium balloon. The car accelerates forward hard. Which way does the balloon swing — back, or forward?",
+    "answer": "Forward. When the car accelerates, everything that has mass (you, the air inside the car, your coffee) gets pushed backwards relative to the car by inertia. The air inside the car is heavier than helium, so the air piles up at the back and the pressure becomes higher at the back than at the front. The light helium balloon floats away from high pressure toward low pressure — exactly the way it floats up away from the denser air below it on the ground. Acceleration acts like a sideways gravity, and helium always rises against gravity.",
+    "category": "physics",
+    "rating": "family",
+    "source": "curios-opus-4.7",
+    "lang": "en"
+  },
+  {
+    "question": "A family has two children. You are told at least one of them is a boy. What is the probability that both children are boys?",
+    "answer": "1/3. The equally-likely orderings of two children are BB, BG, GB, GG. 'At least one boy' rules out GG, leaving BB, BG, GB — three cases, only one with two boys. The intuitive answer 1/2 ignores that BG and GB are distinct outcomes.",
+    "category": "probability",
+    "rating": "family",
+    "source": "curios-opus-4.7",
+    "attribution": "Martin Gardner",
+    "lang": "en"
+  },
+  {
+    "question": "In a room of 23 people, what is roughly the probability that at least two share a birthday?",
+    "answer": "About 50% — just over, in fact (50.7%). It feels too low because we instinctively compare ourselves to others (23 comparisons), but the real count is pairs: C(23,2) = 253 pairs, each with a 1/365 shot. Multiply the chances that all 253 pairs miss and you get just under half.",
+    "category": "probability",
+    "rating": "family",
+    "source": "curios-opus-4.7",
+    "attribution": "classic",
+    "lang": "en"
+  },
+  {
+    "question": "You are on a game show. Behind one of three doors is a car; behind the other two are goats. You pick door 1. The host, who knows what is behind each door, opens door 3 to reveal a goat, then offers to let you switch to door 2. Should you switch?",
+    "answer": "Yes — switching wins 2/3 of the time, staying wins 1/3. Your first pick had a 1/3 chance of being right; the other two doors together had 2/3. The host's reveal does not change your door's odds, so the remaining unopened door now carries the full 2/3.",
+    "category": "probability",
+    "rating": "family",
+    "source": "curios-opus-4.7",
+    "attribution": "Monty Hall",
+    "lang": "en"
+  },
+  {
+    "question": "A little box has no hinges, no key, and no lid — and yet a treasure of pure gold is hidden inside. What is it?",
+    "answer": "An egg. The shell is the seamless 'box', and the yolk is the golden treasure inside. There's no way in without breaking it.",
+    "category": "riddle",
+    "rating": "kids",
+    "source": "curios-opus-4.7",
+    "attribution": "Tolkien-style (folk riddle, not Tolkien verbatim)",
+    "lang": "en"
+  },
+  {
+    "question": "I am tall when I am young, and short when I am old. I give light, but the wind is my enemy, and I weep without sadness. What am I?",
+    "answer": "A candle. It starts long and shrinks as it burns, gives off light, is blown out by wind, and 'weeps' melted wax down its sides.",
+    "category": "riddle",
+    "rating": "kids",
+    "source": "curios-opus-4.7",
+    "attribution": "classic",
+    "lang": "en"
+  },
+  {
+    "question": "I follow you all day long, but vanish when night falls or a light shines straight above. I am tall in the morning, short at noon, and tall again at dusk. What am I?",
+    "answer": "A shadow. It needs light to exist, disappears in darkness or under an overhead sun, and stretches long when the sun is low — short when the sun is high overhead.",
+    "category": "riddle",
+    "rating": "kids",
+    "source": "curios-opus-4.7",
+    "attribution": "classic",
+    "lang": "en"
+  },
+  {
+    "question": "I have cities, but no houses. I have mountains, but no trees. I have rivers, but no fish. What am I?",
+    "answer": "A map. Everything on a map is represented, not real: city names without buildings, mountain shading without forests, blue lines without water or anything swimming in them.",
+    "category": "riddle",
+    "rating": "kids",
+    "source": "curios-opus-4.7",
+    "attribution": "classic",
+    "lang": "en"
+  },
+  {
+    "question": "I run but never walk, I have a bed but never sleep, I have a mouth but never eat, and I murmur but never talk. What am I?",
+    "answer": "A river. Rivers 'run' (flow), have a 'riverbed', empty into the sea at a 'mouth', and 'murmur' as water moves over stones — but they don't do any of these things the way a person would.",
+    "category": "riddle",
+    "rating": "kids",
+    "source": "curios-opus-4.7",
+    "attribution": "classic",
+    "lang": "en"
+  },
+  {
+    "question": "I speak without a mouth and hear without ears. I have no body, but I come alive with the wind. What am I?",
+    "answer": "An echo. It repeats your voice without having a mouth, answers sounds without ears, has no physical body, and is carried on air.",
+    "category": "riddle",
+    "rating": "kids",
+    "source": "curios-opus-4.7",
+    "attribution": "classic",
+    "lang": "en"
+  },
+  {
+    "question": "Voiceless it cries, wingless it flies, toothless it bites, mouthless it mutters. What is it?",
+    "answer": "The wind. It howls without a voice, moves through the air without wings, bites the skin in winter without teeth, and mutters through the trees without a mouth.",
+    "category": "riddle",
+    "rating": "family",
+    "source": "curios-opus-4.7",
+    "attribution": "Tolkien-style (folk riddle, not Tolkien verbatim)",
+    "lang": "en"
+  },
+  {
+    "question": "A primary rainbow goes red-orange-yellow-green-blue-violet from outside to inside. Sometimes you can see a fainter second rainbow above it. What order are the colours in?",
+    "answer": "Reversed — violet on the outside, red on the inside. A rainbow is sunlight that has entered a raindrop, bounced off the back, and come out the front, split into colours by refraction. The primary bow uses one internal bounce. The secondary bow is light that bounced twice inside the drop before coming out. That extra bounce flips the geometry, so the colour order is reversed, and because some light escapes at each bounce, the secondary bow is dimmer.",
+    "category": "science",
+    "rating": "family",
+    "source": "curios-opus-4.7",
+    "lang": "en"
+  },
+  {
+    "question": "If you light a candle on the International Space Station, what shape is the flame?",
+    "answer": "A small blue sphere. On Earth the familiar teardrop shape exists because hot air is less dense than cool air, so it rises — pulling fresh oxygen in from below and stretching the flame upward. In orbit everything is in free fall, so there is no 'up' for hot air to rise to. Convection stops. Oxygen can only reach the flame by slow diffusion from all sides, so the flame burns as a tiny ball, cooler and dimmer than on Earth, and blue because there is too little oxygen for the yellow soot glow we usually see.",
+    "category": "science",
+    "rating": "family",
+    "source": "curios-opus-4.7",
+    "lang": "en"
+  },
+  {
+    "question": "Why can you see your breath on a cold day?",
+    "answer": "The air you breathe out is warm and almost saturated with water vapour from your lungs. When that warm wet air hits cold outside air, it cools so fast that the air can no longer hold all the vapour — the extra water condenses into millions of tiny liquid droplets, which is exactly what a cloud is. You're literally breathing out a tiny cloud. On a warm day the same vapour comes out, but the surrounding air can still hold it as invisible gas, so nothing condenses and you see nothing.",
+    "category": "science",
+    "rating": "kids",
+    "source": "curios-opus-4.7",
+    "lang": "en"
+  },
+  {
+    "question": "Why does ice float, when almost every other solid sinks in its own liquid?",
+    "answer": "Water is weird. Most substances pack tighter as they freeze, so the solid is denser than the liquid and sinks. But water molecules have a lopsided shape and form hydrogen bonds, and when water freezes those bonds lock the molecules into an open hexagonal cage with more empty space between them than in liquid water. So ice is about 9% less dense than liquid water (roughly 917 vs 1000 kg per cubic metre) and floats. This is the reason lakes freeze top-down rather than bottom-up — which is lucky for the fish underneath.",
+    "category": "science",
+    "rating": "family",
+    "source": "curios-opus-4.7",
+    "lang": "en"
+  },
+  {
+    "question": "Why is the sky blue?",
+    "answer": "Sunlight is a mix of all colours, but when it hits the molecules in our atmosphere (mostly nitrogen and oxygen) the shorter, bluer wavelengths get scattered in every direction far more than the longer, redder ones. This is called Rayleigh scattering. So when you look at the sky away from the Sun, what you see is sunlight that has been bounced sideways into your eyes — and that scattered light is dominated by blue. At sunset the Sun's light travels through much more atmosphere to reach you, so by the time it arrives, almost all the blue has been scattered away and only the reds and oranges are left.",
+    "category": "science",
+    "rating": "kids",
+    "source": "curios-opus-4.7",
+    "attribution": "classic",
+    "lang": "en"
+  },
+  {
+    "question": "What is the next number in this sequence: 1, 11, 21, 1211, 111221, 312211, ... ?",
+    "answer": "13112221. It is the look-and-say sequence: each term describes the previous one out loud. 312211 reads as 'one 3, one 1, two 2s, two 1s' → 13112221.",
+    "category": "sequence",
+    "rating": "family",
+    "source": "curios-opus-4.7",
+    "attribution": "Conway",
+    "lang": "en"
+  },
+  {
+    "question": "What letter comes next: O, T, T, F, F, S, S, E, ... ?",
+    "answer": "N. They are the first letters of the counting numbers: One, Two, Three, Four, Five, Six, Seven, Eight, Nine.",
+    "category": "sequence",
+    "rating": "family",
+    "source": "curios-opus-4.7",
+    "attribution": "classic",
+    "lang": "en"
+  },
+  {
+    "question": "A wooden cube is painted red on all six faces, then sliced into 27 small identical cubes (3 along each edge). How many of the small cubes have paint on exactly two faces?",
+    "answer": "12. Think about where each kind of small cube lives. The 8 corner cubes have 3 painted faces. The cube at the centre of each large face (6 of them) has 1 painted face. The single cube buried in the middle has 0 painted faces. The cubes with exactly 2 painted faces are the ones sitting in the middle of each edge of the big cube — one per edge, and a cube has 12 edges, so the answer is 12.",
+    "category": "spatial",
+    "rating": "family",
+    "source": "curios-opus-4.7",
+    "attribution": "classic",
+    "lang": "en"
+  },
+  {
+    "question": "An ant stands on one corner of a hollow 1-metre cube and wants to walk along the surface to the corner diagonally opposite. What is the shortest path?",
+    "answer": "Unfold two adjacent faces of the cube flat onto a 2-by-1 rectangle and draw a straight line from one corner to the far corner — that line crosses the shared edge at its midpoint, and its length is sqrt(1^2 + 2^2) = sqrt(5), about 2.236 metres. The tempting answer of going along an edge then diagonally across one face gives 1 + sqrt(2) ~ 2.414 m, which is longer. The trick is that a straight line on the unfolded surface is still a straight line when you fold the cube back up.",
+    "category": "spatial",
+    "rating": "family",
+    "source": "curios-opus-4.7",
+    "attribution": "classic",
+    "lang": "en"
+  },
+  {
+    "question": "Take a strip of paper, give one end a single half-twist, and tape the ends together to make a Mobius strip. Now cut it lengthways down the middle, all the way around. What do you get?",
+    "answer": "Not two loops — one single longer loop with two full twists in it. Because a Mobius strip has only one side and one edge, your scissors never reach a 'second' piece to separate from. The cut just traces the one continuous edge and you end up with a single, thinner, longer band. If you cut that band down the middle again, then you get two separate loops — linked through each other.",
+    "category": "spatial",
+    "rating": "family",
+    "source": "curios-opus-4.7",
+    "attribution": "classic",
+    "lang": "en"
+  },
+  {
+    "question": "A bat and a ball cost $1.10 together. The bat costs $1.00 more than the ball. How much does the ball cost?",
+    "answer": "5 cents. The tempting answer is 10 cents, but then the bat would be $1.10 ($1 more) and the two would total $1.20 — too much. If the ball is 5c, the bat is $1.05, gap exactly $1, total exactly $1.10. The lesson: 'more than' means a gap, so the ball is half the leftover 10c.",
+    "category": "trap",
+    "rating": "family",
+    "source": "curios-opus-4.7",
+    "attribution": "Kahneman CRT",
+    "lang": "en"
+  },
+  {
+    "question": "A lily pad on a pond doubles in area every day. If it covers the whole pond on day 48, on what day did it cover half the pond?",
+    "answer": "Day 47. Doubling backwards: half-cover is one day before full cover. The trap is dividing 48 by 2 and answering day 24.",
+    "category": "trap",
+    "rating": "family",
+    "source": "curios-opus-4.7",
+    "attribution": "Kahneman CRT",
+    "lang": "en"
+  },
+  {
+    "question": "Three friends split a $30 hotel room ($10 each). Later the clerk realises the room was only $25 and sends a bellhop with $5. The bellhop pockets $2 and gives each friend $1 back. So each friend paid $9 (total $27) and the bellhop has $2 — that's $29. Where is the missing dollar?",
+    "answer": "There is no missing dollar — the question adds the wrong things. The friends paid $27 total: $25 went to the hotel, $2 to the bellhop. You should not add the bellhop's $2 to the $27; the $2 is already inside it.",
+    "category": "trap",
+    "rating": "family",
+    "source": "curios-opus-4.7",
+    "attribution": "classic",
+    "lang": "en"
+  },
+  {
+    "question": "You drive to your grandma's at 30 mph, then return along the same road at 60 mph. What is your average speed for the round trip?",
+    "answer": "40 mph, not 45. Average speed is total-distance over total-time. Say the trip is 60 miles each way: out takes 2 hours, back takes 1 hour, so 120 miles in 3 hours = 40 mph. The arithmetic mean of speeds only works if you spend equal time at each speed, not equal distance.",
+    "category": "trap",
+    "rating": "family",
+    "source": "curios-opus-4.7",
+    "attribution": "classic",
+    "lang": "en"
+  },
+  {
+    "question": "I am an eight-letter word. Remove one letter and I am still a word. Remove another and I am still a word — keep going until only one letter is left, and every step is a real English word. What word am I?",
+    "answer": "STARTING. The chain: STARTING → STARING → STRING → STING → SING → SIN → IN → I. Each step drops exactly one letter and lands on a real word.",
+    "category": "wordplay",
+    "rating": "family",
+    "source": "curios-opus-4.7",
+    "attribution": "classic",
+    "lang": "en"
+  },
+  {
+    "question": "What five-letter word becomes shorter when you add two letters to it?",
+    "answer": "SHORT. Add E and R and you get SHORTER — the word literally becomes 'shorter', even though it's gained letters. The trick is that 'shorter' means less in length, not fewer letters.",
+    "category": "wordplay",
+    "rating": "family",
+    "source": "curios-opus-4.7",
+    "attribution": "classic",
+    "lang": "en"
+  },
+  {
+    "question": "What five-letter word has only one left when you take two letters away?",
+    "answer": "STONE. Remove the S and the T and you're left with ONE. The puzzle hides the trick by talking about 'one' as a count when it's actually the word.",
+    "category": "wordplay",
+    "rating": "family",
+    "source": "curios-opus-4.7",
+    "attribution": "classic",
+    "lang": "en"
+  }
+]

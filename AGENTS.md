@@ -13,7 +13,7 @@ The built datasets today are all quote types (clock, tv, comic, with movie/book 
 | comic | `dist/comic-quotes.json` | `[entry]` flat array | 122 quotes (Calvin and Hobbes) |
 | movie | `dist/movie-quotes.json` | `[entry]` flat array | no sources yet |
 | book | `dist/book-quotes.json` | `[entry]` flat array | no sources yet |
-| puzzle | `dist/puzzles.json` | `[entry]` flat array | type built, no sources yet |
+| puzzle | `dist/puzzles.json` | `[entry]` flat array | 58 hand-curated, family-rated |
 | fact | `dist/facts.json` | `[entry]` flat array | type built, no sources yet |
 
 `book` is general, non-time-keyed book quotes — distinct from `clock`, which is literary quotes that happen to mention a time. `dist/books.json` is separate again: Open Library *metadata* enriching the clock dataset, not a quote set.
@@ -38,6 +38,8 @@ sources/
   clock/          johannesne.csv, scifi-fantasy.csv, guardian-2011.csv, urdu.jsonl
   tv/             bluey.jsonl
   comic/          calvin-hobbes.jsonl
+  puzzle/         logic-mystery.jsonl, math.jsonl,
+                  science-spatial.jsonl, riddle-wordplay.jsonl
                   (a movie/ and book/ folder get created when first sourced)
 dist/             all outputs, plus a README.md documenting each file's schema
 docs/             internal design notes, not user-facing
@@ -128,7 +130,7 @@ Scrapers may use dependencies the build can't — they live in the `scrape` depe
 No half-finished features. In declining order of value-per-effort:
 
 1. **More tv/comic/movie/book sources.** The flat pipeline is built and proven on Bluey (tv) and Calvin and Hobbes (comic). Each new source is one scraper + one snapshot. Kids want more quotes — more kids' shows (`rating: "kids"`) is the obvious next move.
-2. **Puzzle and fact sources.** The `puzzle` and `fact` types are built into `flat.py` (flat schema, no envelope — see `dist/README.md`); what's left is sources. Curate a proper puzzle source from scratch — `chota-bot`'s handful of puzzles are a stopgap, not worth importing — and a space-facts pool to replace chota's live `bootprint` API. Don't bake selection (by-minute / by-day) into the data — that's a consumer concern.
+2. **More puzzles, and fact sources.** Puzzles are seeded — 58 hand-curated entries across logic/mystery, math, science/spatial, riddle/wordplay (`sources/puzzle/*.jsonl`); next moves are growing the pool (more lateral / mini-mystery / wordplay) and considering a `category`-level read of the pool by consumers. The `fact` type is still built but unsourced — a space-facts pool to replace chota's live `bootprint` API is the obvious first source. Don't bake selection (by-minute / by-day) into the data — that's a consumer concern.
 3. **`books_overrides.json` for top unmatched books.** Manual `(title, author) → OLID` for deep cuts OL search misses. Biggest gap: Murakami's *Blind Willow, Sleeping Woman* (42 quotes). Ten entries lifts clock-quote book coverage 3–5%. See [`docs/enrichment.md`](docs/enrichment.md).
 4. **Authors enrichment.** Mirror `enrich_books.py` — walk authors, fetch OL author records, write `authors.json`. Adds bio + photo per author.
 5. **Episode numbers for tv.** The Bluey source gives season + episode title but no `SxEy` number. A small title→number map (Bluey episodes are well documented) would let tv entries carry a proper `episode` field.

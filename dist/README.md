@@ -140,20 +140,30 @@ array.
 ]
 ```
 
-## puzzles.json — planned
+## puzzles.json — built
 
-Puzzles and riddles. Flat array. `answer` is **optional** — a consumer can
-print the `question` and reveal or look up the `answer` separately.
+Puzzles and riddles. Flat array. `answer` is **optional** in the schema — a
+consumer can print the `question` and reveal or look up the `answer`
+separately — but every entry in the current pool ships an `answer` with a brief
+explanation of *why*, so a single print can carry both. `attribution` is
+optional: a real originator when known (`Kahneman CRT`, `Conway`, `Smullyan`,
+`Sphinx (Oedipus)`), `classic` for folk puzzles, omitted when the puzzle is
+the curator's own.
+
+58 entries today, all hand-curated. Categories span `logic`, `lateral`,
+`mystery`, `trap`, `counting`, `number-theory`, `sequence`, `probability`,
+`science`, `physics`, `spatial`, `geometry`, `riddle`, `wordplay`, `classic`.
 
 ```json
 [
   {
-    "question": "A bat and a ball cost $1.10 together. The bat costs $1.00 more than the ball. How much is the ball?",
-    "answer": "5 cents",
+    "question": "A bat and a ball cost $1.10 together. The bat costs $1.00 more than the ball. How much does the ball cost?",
+    "answer": "5 cents. The tempting answer is 10 cents, but then the bat would be $1.10 ($1 more) and the two would total $1.20 — too much. If the ball is 5c, the bat is $1.05, gap exactly $1, total exactly $1.10.",
     "category": "trap",
     "rating": "family",
     "lang": "en",
-    "source": "Kahneman CRT"
+    "source": "curios-opus-4.7",
+    "attribution": "Kahneman CRT"
   }
 ]
 ```

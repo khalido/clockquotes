@@ -33,6 +33,24 @@ The build picks up every `*.jsonl` in `tv/` automatically. A `movie/` and `book/
 | --- | ---: | --- | --- |
 | [`calvin-hobbes.jsonl`](comic/calvin-hobbes.jsonl) | 122 | ✅ | Calvin and Hobbes quotes scraped from [TVTropes](https://tvtropes.org/pmwiki/pmwiki.php/Quotes/CalvinAndHobbes). All `rating: "family"`. Produced by `src/fetch_calvin_hobbes.py` (TVTropes is bot-blocked, so it fetches via the Wayback Machine). |
 
+## puzzle/
+
+Hand-curated, not scraped. Each file is a slice drafted against a shared
+family brief (curious kids 10+, science-and-mysteries leanings, leans into
+discussion-starters and the occasional laugh). No fetcher — edit the JSONL
+by hand to grow the pool.
+
+Every entry carries `source: "curios-opus-4.7"` — the curation pipeline
+plus the model that drafted the answers (Claude Opus 4.7). A future batch
+under a newer model would get its own source tag.
+
+| File | Rows | Used by build? | Description |
+| --- | ---: | --- | --- |
+| [`logic-mystery.jsonl`](puzzle/logic-mystery.jsonl) | 13 | ✅ | Logic puzzles (knights/knaves, rope-fuses, 3 switches, 12 coins), lateral thinking (monk on the mountain, the Monopoly car), and Encyclopaedia-Brown-style mini-mysteries. |
+| [`math.jsonl`](puzzle/math.jsonl) | 16 | ✅ | Counter-intuitive math: traps (bat-and-ball, lily-pad, missing-dollar), counting (chessboard squares, MISSISSIPPI), sequences (look-and-say, OTTFFSSE), probability (Monty Hall, birthday paradox). |
+| [`science-spatial.jsonl`](puzzle/science-spatial.jsonl) | 15 | ✅ | "Why does X happen" science questions, plus visualisation puzzles (painted cube, ant on cube, Möbius strip, geodesic on a cylinder). |
+| [`riddle-wordplay.jsonl`](puzzle/riddle-wordplay.jsonl) | 14 | ✅ | The Sphinx and Bilbo-style "what am I" riddles (candle, echo, shadow, river, egg, wind, map), plus wordplay (SHORT → SHORTER, STARTING → I). |
+
 ## urdu bucket → HH:MM mapping
 
 The Urdu source uses time-of-day buckets, not minute precision — classical

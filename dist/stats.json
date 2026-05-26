@@ -93,5 +93,16 @@
       "family": 122
     },
     "build_drops": {}
+  },
+  "puzzle": {
+    "total_entries": 58,
+    "by_source": {
+      "curios-opus-4.7": 58
+    },
+    "rating_breakdown": {
+      "family": 46,
+      "kids": 12
+    },
+    "build_drops": {}
   }
 }
