@@ -7,7 +7,7 @@ dashboard, kiosk, or daily brief.
 Fetch any built file directly without cloning the repo:
 
 ```
-https://raw.githubusercontent.com/khalido/curios/main/dist/<filename>
+https://raw.githubusercontent.com/khalido/curios/refs/heads/main/dist/<filename>
 ```
 
 ## shared fields

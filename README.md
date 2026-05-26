@@ -1,11 +1,11 @@
 # curios
 
-A curated library of content datasets for dashboards, kiosks, and daily briefs. Quote datasets today — puzzles, facts, and trivia planned. Plain JSON files — no accounts, no API. Grab a file from [`dist/`](dist/) and wire it in.
+A curated library of content datasets for dashboards, kiosks, and daily briefs. Quote datasets and a puzzle pool today — facts and trivia planned. Plain JSON files — no accounts, no API. Grab a file from [`dist/`](dist/) and wire it in.
 
 Fetch a dataset directly without cloning:
 
 ```
-https://raw.githubusercontent.com/khalido/curios/main/dist/clock-quotes.json
+https://raw.githubusercontent.com/khalido/curios/refs/heads/main/dist/clock-quotes.json
 ```
 
 Swap the filename for any built file in the table below.
